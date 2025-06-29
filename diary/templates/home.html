@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>Главная</title>
+
+{% block content %}
+div class="container-fluid">
+    <main>
+        <section class="text-center container">
+            <div class="row py-lg-0">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Личный дневник</h1>
+                    <p class="lead text-body-secondary">Напишите здесь всё, что вам важно</p>
+
+                    {% if user.is_authenticated %}
+                    <p> Добро пожаловать, {{user.display_name}}!</p>
+                    {% else %}
+                    <p> Добро пожаловать!</p>
+                    <p> Вход на сайт расположен в верхнем меню </p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<main>
+    <section class="py-0 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+
+
+                    {% if perms.users.can_inactivate %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p></p>
+                        <a class="btn btn-secondary me-2" button style="width: 200px;" role="button"
+                           href="{% url 'diary:diary/settings' %}">Изменить настройки дневника</a>
+                        <p></p>
+                        <a class="btn btn-primary me-2" button style="width: 200px;" role="button"
+                           href="{% url 'diary:create' %}">Добавить запись в дневник</a>
+                        <p></p>
+                        <a class="btn btn-secondary me-2" button style="width: 200px;" role="button"
+                           href="{% url 'diary:entry-list' %}">Просмотреть все мои записи</a>
+                        <p></p>
+                    </div>
+                    {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}tml>

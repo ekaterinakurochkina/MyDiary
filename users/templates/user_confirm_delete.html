@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+<title>Удаление пользователя</title>
+
+
+{% block content %}
+<div class="container-fluid">
+    <main>
+        <section class="text-center container">
+            <div class="row py-lg-0">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Удаление пользователя</h1>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {% if object.is_superuser %}
+    <p>Вы уверены, что хотите удалить аккаунт "{{ object.email }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a href="{% url 'users:user_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+    {% else %}
+    <div style="text-align: center; margin-top: 0px; margin-bottom: 30px;">
+        <h3 class="fw-light">У Вас нет прав для удаления этого аккаунта</h3>
+        <a class="btn btn-primary " button
+           style="width: 540px; color: white; padding: 10px 10px; border: none; border-radius: 4px; cursor: pointer"
+           href="{% url 'users:user_list' %}">Вернуться</a>
+    </div>
+    {% endif %}
+    <p></p>
+    <p></p>
+
+
+    {% endblock %}
