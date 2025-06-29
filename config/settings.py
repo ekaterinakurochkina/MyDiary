@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from django.conf.global_settings import AUTH_USER_MODEL, LOGIN_REDIRECT_URL
+from django.conf.global_settings import AUTH_USER_MODEL, LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -118,8 +118,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False) == True  #
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', True) == False
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'False') == 'True'  # Отключить TLS (по умолчанию True)
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'True'  ) == 'True'  # Включить SSL
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
@@ -127,4 +127,5 @@ SERVER_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

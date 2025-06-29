@@ -1,8 +1,7 @@
-from django.db import models
-from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import RegexValidator, EmailValidator
-from django.core.exceptions import ValidationError
+from django.db import models
+
 
 class User(AbstractUser):
     username = None
@@ -35,6 +34,12 @@ class User(AbstractUser):
                 message="Номер телефона должен быть в формате: '+999999999'"
             )
         ]
+    )
+    token = models.CharField(
+        max_length=100,
+        verbose_name="Token",
+        blank=True,
+        null=True
     )
 
     avatar = models.ImageField(

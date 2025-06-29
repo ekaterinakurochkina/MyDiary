@@ -11,9 +11,9 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from users.forms import UserRegisterForm, UserUpdateForm
 
 from config.settings import EMAIL_HOST_USER
+from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import User
 
 
@@ -88,10 +88,10 @@ class UserCreateView(CreateView):
             print(f'Error sending email: {e}')
         return super().form_valid(form)
 
-
 def email_verification(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
+    user.token = None  # очищаем токен после использования
     user.save()
     return redirect(reverse_lazy("users:login"))
 
