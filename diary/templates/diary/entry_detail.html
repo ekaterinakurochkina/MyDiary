@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <h2>Запись от {{ entry.created_at|date:"d.m.Y H:i" }}</h2>
+                <div>
+                    <a href="{% url 'diary:entry_update' entry.pk %}" class="btn btn-sm btn-outline-secondary">
+                        Редактировать
+                    </a>
+                    <a href="{% url 'diary:entry_delete' entry.pk %}" class="btn btn-sm btn-outline-danger">
+                        Удалить
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if entry.targets %}
+            <div class="mb-4 p-3 bg-light rounded">
+                <h4>Мои цели</h4>
+                <p>{{ entry.targets|linebreaks }}</p>
+            </div>
+            {% endif %}
+
+            <div class="mb-4">
+                <h4>Текст записи</h4>
+                <p>{{ entry.text|linebreaks }}</p>
+            </div>
+
+            {% if entry.custom_fields.all %}
+            <div class="mb-4">
+                <h4>Дополнительные поля</h4>
+                <table class="table">
+                    <tbody>
+                    {% for field in entry.custom_fields.all %}
+                    <tr>
+                        <th width="30%">{{ field.name }}</th>
+                        <td>{{ field.value }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                {% for tag in entry.tags.all %}
+                <span class="badge bg-secondary">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            Обновлено: {{ entry.updated_at|date:"d.m.Y H:i" }}
+        </div>
+    </div>
+
+    <a href="{% url 'diary:entry_list' %}" class="btn btn-outline-primary mt-3">
+        Назад к списку
+    </a>
+</div>
+{% endblock %}

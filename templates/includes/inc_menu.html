@@ -12,8 +12,8 @@
             {% if user.is_authenticated %}
             <li><a href="{% url 'diary:home' %}" class="text-white">Главная</a></li>
             <li><a href="{% url 'diary:settings' %}" class="text-white">Настройки</a></li>
-            <li><a href="{% url 'diary:entry-create' %}" class="text-white">Запись в дневнике</a></li>
-            <li><a href="{% url 'diary:entry-list' %}" class="text-white">Мои записи</a></li>
+            <li><a href="{% url 'diary:entry_create' %}" class="text-white">Запись в дневнике</a></li>
+            <li><a href="{% url 'diary:entry_list' %}" class="text-white">Мои записи</a></li>
             {% endif %}
           </ul>
         </div>

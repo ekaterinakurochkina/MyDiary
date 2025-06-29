@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Мой дневник</h1>
+
+    <a href="{% url 'diary:entry_create' %}" class="btn btn-primary mb-4">
+        Новая запись
+    </a>
+
+    {% if entries %}
+    <div class="list-group">
+        {% for entry in entries %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <h5>
+                    <a href="{% url 'diary:entry_detail' entry.pk %}">
+                        Запись от {{ entry.created_at|date:"d.m.Y H:i" }}
+                    </a>
+                </h5>
+                <div>
+                    <a href="{% url 'diary:entry_update' entry.pk %}" class="btn btn-sm btn-outline-secondary">
+                        Редактировать
+                    </a>
+                    <a href="{% url 'diary:entry_delete' entry.pk %}" class="btn btn-sm btn-outline-danger">
+                        Удалить
+                    </a>
+                </div>
+            </div>
+            <div class="mt-2">
+                {% if user.diarysettings.show_targets and entry.targets %}
+                <p class="text-muted"><strong>Цели:</strong> {{ entry.targets|truncatechars:100 }}</p>
+                {% endif %}
+                <p>{{ entry.text|truncatechars:200 }}</p>
+            </div>
+            <div class="mt-2">
+                {% if user.diarysettings.show_tags %}
+                <div class="mt-2">
+                    {% for tag in entry.tags.all %}
+                    <span class="badge bg-secondary">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% include 'includes/pagination.html' %}
+    {% else %}
+    <div class="alert alert-info">
+        У вас пока нет записей. Создайте первую!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

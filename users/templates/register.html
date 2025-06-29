@@ -4,7 +4,9 @@
 {% block content %}
 <div class="container-fluid d-flex justify-content-center align-items-center">
     <div class="auth-container">
-        <h2>Регистрация</h2>
+        <div style="margin-top: 20px;" class="auth-links text-center">
+            <h2>Регистрация</h2>
+        </div>
         <form method="post" class="auth-form">
             {% csrf_token %}
             {% for field in form %}
@@ -16,11 +18,13 @@
                 {% endif %}
             </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <div class="auth-links text-center">
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
         </form>
         <div class="auth-links">
             Уже есть аккаунт? <a href="{% url 'users:login' %}">Войти</a>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
