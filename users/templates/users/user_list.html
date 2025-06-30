@@ -67,8 +67,8 @@
                 </td>
                 <td>
                     {% if not user.is_superuser %}
-                    <a class="btn btn-danger" style="width: 150px;" role="button"
-                       href="{% url 'users:user_delete' user.pk %}">Удалить</a>
+                    <a class="btn btn-danger" href="{% url 'users:user_delete' user.pk %}" role="button"
+                       style="width: 150px;">Удалить</a>
                     {% endif %}
                 </td>
             </tr>
@@ -83,8 +83,8 @@
 
     <div style="text-align: center; margin-top: 0px; margin-bottom: 30px;">
         <a class="btn btn-primary"
-           style="width: 540px; color: white; padding: 10px 10px; border: none; border-radius: 4px; cursor: pointer"
-           href="{% url 'diary:home' %}">На главную</a>
+           href="{% url 'diary:home' %}"
+           style="width: 540px; color: white; padding: 10px 10px; border: none; border-radius: 4px; cursor: pointer">На главную</a>
     </div>
 
 </div>

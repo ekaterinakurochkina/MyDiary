@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Мои записи</h1>
-        <a href="{% url 'diary:entry_create' %}" class="btn btn-outline-primary">
+        <a class="btn btn-outline-primary" href="{% url 'diary:entry_create' %}">
             <i class="fas fa-plus"></i> Новая запись
         </a>
     </div>
@@ -12,21 +12,21 @@
     <!-- Форма поиска -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
-            <form method="get" class="row g-3">
+            <form class="row g-3" method="get">
                 <div class="col-md-8">
-                    <input type="text"
+                    <input class="form-control"
                            name="q"
-                           value="{{ search_query }}"
-                           class="form-control"
-                           placeholder="Поиск по тексту...">
+                           placeholder="Поиск по тексту..."
+                           type="text"
+                           value="{{ search_query }}">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button class="btn btn-primary w-100" type="submit">
                         <i class="fas fa-search"></i> Найти
                     </button>
                 </div>
                 <div class="col-md-2">
-                    <a href="{% url 'diary:entry_list' %}" class="btn btn-outline-secondary w-100"
+                    <a class="btn btn-outline-secondary w-100" href="{% url 'diary:entry_list' %}"
                        style="font-size: 0.9rem;">
                         <i class="fas fa-times"></i> Сбросить
                     </a>
@@ -39,8 +39,8 @@
                 <h6 class="text-muted mb-2">Поиск по тегам:</h6>
                 <div class="d-flex flex-wrap gap-2">
                     {% for tag in tags %}
-                    <a href="?tag={{ tag.name }}"
-                       class="badge bg-light text-dark border text-decoration-none">
+                    <a class="badge bg-light text-dark border text-decoration-none"
+                       href="?tag={{ tag.name }}">
                         {{ tag.name }}
                     </a>
                     {% endfor %}
@@ -65,10 +65,10 @@
                     {% endif %}
                 </div>
                 <div class="ms-3 d-flex">
-                    <a href="{% url 'diary:entry_detail' pk=entry.pk %}" class="btn btn-sm btn-outline-secondary me-2">
+                    <a class="btn btn-sm btn-outline-secondary me-2" href="{% url 'diary:entry_detail' pk=entry.pk %}">
                         <i class="fas fa-eye"></i>
                     </a>
-                    <a href="{% url 'diary:entry_confirm_delete' pk=entry.pk %}" class="btn btn-sm btn-outline-danger">
+                    <a class="btn btn-sm btn-outline-danger" href="{% url 'diary:entry_confirm_delete' pk=entry.pk %}">
                         <i class="fas fa-trash"></i>
                     </a>
                 </div>
@@ -76,7 +76,7 @@
             {% if entry.tags.all %}
             <div class="mt-2">
                 {% for tag in entry.tags.all %}
-                <a href="?tag={{ tag.name }}" class="badge bg-light text-dark border me-1">{{ tag }}</a>
+                <a class="badge bg-light text-dark border me-1" href="?tag={{ tag.name }}">{{ tag }}</a>
                 {% endfor %}
             </div>
             {% endif %}
@@ -90,12 +90,12 @@
         <div class="card-body text-center py-5">
             {% if search_query or tag_query %}
             <p class="text-muted mb-4">Ничего не найдено по вашему запросу</p>
-            <a href="{% url 'diary:entry_list' %}" class="btn btn-outline-primary">
+            <a class="btn btn-outline-primary" href="{% url 'diary:entry_list' %}">
                 <i class="fas fa-list"></i> Показать все записи
             </a>
             {% else %}
             <p class="text-muted mb-4">У вас пока нет записей</p>
-            <a href="{% url 'diary:entry_create' %}" class="btn btn-outline-primary">
+            <a class="btn btn-outline-primary" href="{% url 'diary:entry_create' %}">
                 <i class="fas fa-plus"></i> Создать первую запись
             </a>
             {% endif %}

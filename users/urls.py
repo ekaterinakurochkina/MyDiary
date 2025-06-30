@@ -1,11 +1,12 @@
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
 from django.urls import path
-from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
+
+from .forms import StyledPasswordChangeForm
 from .views import (email_verification, UserListView, UserCreateView,
                     DeleteAccountView, logout_view, ProfileUpdateView, remove_avatar)
-from django.urls import reverse_lazy
-from django.views.decorators.csrf import csrf_exempt
-from .forms import StyledPasswordChangeForm
+
 app_name = 'users'
 
 urlpatterns = [

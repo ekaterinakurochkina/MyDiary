@@ -8,7 +8,7 @@
             Вход в систему
         </h1>
         <div>
-            <a href="/" class="btn btn-sm btn-outline-secondary">  <!-- Изменено на корневой URL -->
+            <a class="btn btn-sm btn-outline-secondary" href="/">  <!-- Изменено на корневой URL -->
                 <i class="fas fa-arrow-left"></i> На главную
             </a>
         </div>
@@ -16,7 +16,7 @@
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
-            <form method="post" class="auth-form">
+            <form class="auth-form" method="post">
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="mb-3">
@@ -29,10 +29,10 @@
                 {% endfor %}
 
                 <div class="d-flex justify-content-between align-items-center mt-4">
-                    <button type="submit" class="btn btn-primary">
+                    <button class="btn btn-primary" type="submit">
                         <i class="fas fa-sign-in-alt me-1"></i> Войти
                     </button>
-                    <a href="{% url 'users:register' %}" class="text-muted small">
+                    <a class="text-muted small" href="{% url 'users:register' %}">
                         Нет аккаунта? Зарегистрироваться
                     </a>
                 </div>

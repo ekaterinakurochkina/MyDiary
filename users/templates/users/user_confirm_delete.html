@@ -19,15 +19,15 @@
     <p>Вы уверены, что хотите удалить аккаунт "{{ object.email }}"?</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Удалить</button>
-        <a href="{% url 'users:user_list' %}" class="btn btn-secondary">Отмена</a>
+        <button class="btn btn-danger" type="submit">Удалить</button>
+        <a class="btn btn-secondary" href="{% url 'users:user_list' %}">Отмена</a>
     </form>
     {% else %}
     <div style="text-align: center; margin-top: 0px; margin-bottom: 30px;">
         <h3 class="fw-light">У Вас нет прав для удаления этого аккаунта</h3>
-        <a class="btn btn-primary " button
-           style="width: 540px; color: white; padding: 10px 10px; border: none; border-radius: 4px; cursor: pointer"
-           href="{% url 'users:user_list' %}">Вернуться</a>
+        <a button class="btn btn-primary "
+           href="{% url 'users:user_list' %}"
+           style="width: 540px; color: white; padding: 10px 10px; border: none; border-radius: 4px; cursor: pointer">Вернуться</a>
     </div>
     {% endif %}
     <p></p>

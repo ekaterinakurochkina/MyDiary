@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.forms import UserCreationForm
 
 from diary.forms import StyleFormMixin
@@ -52,6 +51,7 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
 from django import forms
 from .models import User
 
+
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
@@ -85,6 +85,7 @@ class ProfileUpdateForm(forms.ModelForm):
         # Устанавливаем начальное значение для display_name
         if self.instance and self.instance.display_name:
             self.fields['display_name'].initial = self.instance.display_name
+
 
 class PasswordRecoveryForm(StyleFormMixin, forms.Form):
     email = forms.EmailField(label="Укажите Email")

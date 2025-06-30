@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, UpdateView, DetailView, TemplateView, ListView, DeleteView
 from taggit.models import Tag
+
 from .forms import DiarySettingsForm, DiaryEntryForm
 from .models import DiaryEntry, DiarySettings, CustomField
 

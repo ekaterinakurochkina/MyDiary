@@ -15,8 +15,8 @@
 
             <form method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Да, удалить</button>
-                <a href="{% url 'diary:entry_detail' entry.pk %}" class="btn btn-outline-secondary">
+                <button class="btn btn-danger" type="submit">Да, удалить</button>
+                <a class="btn btn-outline-secondary" href="{% url 'diary:entry_detail' entry.pk %}">
                     Отмена
                 </a>
             </form>

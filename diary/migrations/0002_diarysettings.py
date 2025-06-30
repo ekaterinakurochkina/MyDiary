@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('diary', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -19,8 +18,10 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('show_targets', models.BooleanField(default=True, verbose_name='Показывать цели')),
                 ('show_tags', models.BooleanField(default=True, verbose_name='Показывать теги')),
-                ('theme', models.CharField(choices=[('light', 'Светлая'), ('dark', 'Тёмная')], default='light', max_length=20)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('theme',
+                 models.CharField(choices=[('light', 'Светлая'), ('dark', 'Тёмная')], default='light', max_length=20)),
+                (
+                'user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

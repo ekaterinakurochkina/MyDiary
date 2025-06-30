@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <h1 class="mb-4">{% if is_update %}Редактировать запись{% else %}Новая запись{% endif %}</h1>
 
-    <form method="post" class="mb-4">
+    <form class="mb-4" method="post">
         {% csrf_token %}
 
         <div class="card mb-4">
@@ -45,13 +45,13 @@
                 <h5 class="card-title">Дополнительные поля</h5>
                 {% for field in custom_fields %}
                 <div class="form-group">
-                    <label for="custom_{{ field.name }}" class="font-weight-bold">{{ field.name }}</label>
-                    <input type="text"
+                    <label class="font-weight-bold" for="custom_{{ field.name }}">{{ field.name }}</label>
+                    <input class="form-control"
                            id="custom_{{ field.name }}"
                            name="custom_{{ field.name }}"
-                           class="form-control"
-                           value="{{ field.value }}"
-                           placeholder="Введите значение для {{ field.name }}">
+                           placeholder="Введите значение для {{ field.name }}"
+                           type="text"
+                           value="{{ field.value }}">
                 </div>
                 {% endfor %}
             </div>
@@ -59,11 +59,11 @@
         {% endif %}
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">
+            <button class="btn btn-primary" type="submit">
                 <i class="fas fa-save"></i> Сохранить
             </button>
-            <a href="{% if is_update %}{% url 'diary:entry_detail' pk=object.pk %}{% else %}{% url 'diary:entry_list' %}{% endif %}"
-               class="btn btn-secondary ml-2">
+            <a class="btn btn-secondary ml-2"
+               href="{% if is_update %}{% url 'diary:entry_detail' pk=object.pk %}{% else %}{% url 'diary:entry_list' %}{% endif %}">
                 <i class="fas fa-times"></i> Отмена
             </a>
         </div>

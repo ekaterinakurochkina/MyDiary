@@ -7,7 +7,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -24,8 +23,11 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Дата обновления')),
                 ('text', models.TextField(verbose_name='Основной текст')),
                 ('targets', models.CharField(blank=True, help_text='Напишите здесь свои цели', max_length=255)),
-                ('tags', taggit.managers.TaggableManager(blank=True, help_text='Введите теги через запятую', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='diary_entries', to=settings.AUTH_USER_MODEL)),
+                ('tags', taggit.managers.TaggableManager(blank=True, help_text='Введите теги через запятую',
+                                                         through='taggit.TaggedItem', to='taggit.Tag',
+                                                         verbose_name='Tags')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='diary_entries',
+                                           to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -34,7 +36,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('value', models.CharField(max_length=255)),
-                ('entry', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='custom_fields', to='diary.diaryentry')),
+                ('entry', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='custom_fields',
+                                            to='diary.diaryentry')),
             ],
         ),
     ]

@@ -9,10 +9,10 @@
         <p>Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить.</p>
         <div class="form-group">
             <label for="password">Подтвердите пароль:</label>
-            <input type="password" name="password" required class="form-control">
+            <input class="form-control" name="password" required type="password">
         </div>
-        <button type="submit" class="btn btn-danger">Удалить аккаунт</button>
-        <a href="{% url 'diary:home' %}" class="btn btn-secondary">Отмена</a>
+        <button class="btn btn-danger" type="submit">Удалить аккаунт</button>
+        <a class="btn btn-secondary" href="{% url 'diary:home' %}">Отмена</a>
     </form>
 </div>
 {% endblock %}
