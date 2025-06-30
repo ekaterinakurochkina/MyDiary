@@ -1,51 +1,73 @@
-{% extends 'base.html' %}
-{% load static %}
-<title>Главная</title>
+{% extends "base.html" %}
 
 {% block content %}
+<div class="container mt-4">
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body text-center py-5">
+            <h1 class="mb-4">Мой дневник</h1>
+            <p class="lead text-muted mb-4">
+                Записывайте свои мысли, цели и идеи в персональном дневнике
+            </p>
 
-<main>
-    <section class="text-center container">
-        <div class="row py-lg-0">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">Личный дневник</h1>
-                <p class="lead text-body-secondary">Напишите здесь всё, что вам важно</p>
-
+            <div class="d-flex justify-content-center gap-3">
                 {% if user.is_authenticated %}
-                <p> Добро пожаловать, {{user.display_name}}!</p>
+                    <a href="{% url 'diary:entry_list' %}" class="btn btn-primary px-4">
+                        <i class="fas fa-book-open me-2"></i>Мои записи
+                    </a>
+                    <a href="{% url 'diary:entry_create' %}" class="btn btn-outline-primary px-4">
+                        <i class="fas fa-plus me-2"></i>Новая запись
+                    </a>
                 {% else %}
-                <p> <h3 class="fw-light">Добро пожаловать на наш сайт!</h3></p>
-                <p> Вход на сайт расположен в верхнем меню </p>
+                    <a href="{% url 'login' %}" class="btn btn-primary px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Войти
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary px-4">
+                        <i class="fas fa-user-plus me-2"></i>Регистрация
+                    </a>
                 {% endif %}
-
             </div>
         </div>
-    </section>
-</main>
-</div>
+    </div>
 
-<main>
-    <section class="py-0 text-center container">
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-
-
-                {% if perms.users.can_inactivate %}
-                <div class="d-flex justify-content-between align-items-center">
-                    <p></p>
-                    <a class="btn btn-secondary me-2" button style="width: 200px;" role="button"
-                       href="{% url 'diary:settings' %}">Изменить настройки дневника</a>
-                    <p></p>
-                    <a class="btn btn-primary me-2" button style="width: 200px;" role="button"
-                       href="{% url 'diary:entry_create' %}">Добавить запись в дневник</a>
-                    <p></p>
-                    <a class="btn btn-secondary me-2" button style="width: 200px;" role="button"
-                       href="{% url 'diary:entry_list' %}">Просмотреть все мои записи</a>
-                    <p></p>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-feather-alt text-primary me-2"></i>Личные записи
+                    </h5>
+                    <p class="card-text text-muted">
+                        Сохраняйте свои мысли и размышления в безопасном пространстве.
+                    </p>
                 </div>
-                {% endif %}
             </div>
         </div>
-    </section>
-</main>
-{% endblock %}tml>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-bullseye text-primary me-2"></i>Цели и планы
+                    </h5>
+                    <p class="card-text text-muted">
+                        Отслеживайте свои цели и прогресс в их достижении.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-tags text-primary me-2"></i>Гибкая система
+                    </h5>
+                    <p class="card-text text-muted">
+                        Настраивайте дневник под свои нужды с помощью тегов и полей.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

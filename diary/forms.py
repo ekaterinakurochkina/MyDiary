@@ -44,7 +44,21 @@ class DiaryEntryForm(forms.ModelForm):
 class DiarySettingsForm(forms.ModelForm):
     class Meta:
         model = DiarySettings
-        fields = ['show_targets', 'show_tags', 'theme', 'default_targets']
+        fields = ['show_targets', 'show_tags', 'default_targets']
         widgets = {
-            'default_targets': forms.TextInput(attrs={'class': 'form-control'}),
+            'default_targets': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Например: Прочитать книгу, Пробежать 5км'
+            }),
+            'show_targets': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'show_tags': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+        labels = {
+            'show_targets': '',
+            'show_tags': '',
+            'default_targets': ''
         }

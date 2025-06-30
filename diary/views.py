@@ -22,7 +22,7 @@ class HomePageView(TemplateView):
 class SettingsView(LoginRequiredMixin, UpdateView):
     template_name = 'diary/settings.html'
     form_class = DiarySettingsForm
-    success_url = reverse_lazy('diary:entry_create')
+    success_url = reverse_lazy('diary:settings')
 
     def get_object(self, queryset=None):
         obj, created = DiarySettings.objects.get_or_create(user=self.request.user)
@@ -34,10 +34,9 @@ class SettingsView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        # Обработка кастомных полей из AJAX запроса
-        custom_fields = self.request.POST.getlist('custom_fields[]')
-        if custom_fields:
-            self.object.custom_fields_names = [f.strip() for f in custom_fields if f.strip()]
+        # Обработка кастомных полей
+        custom_fields = self.request.POST.getlist('custom_fields')
+        form.instance.custom_fields_names = [f.strip() for f in custom_fields if f.strip()]
         return super().form_valid(form)
 
 
@@ -61,10 +60,15 @@ class DiaryEntryCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         settings = get_object_or_404(DiarySettings, user=self.request.user)
+
+        # Создаем список словарей с именами полей и пустыми значениями
+        custom_fields = [{'name': name, 'value': ''} for name in settings.custom_fields_names]
+
         context.update({
-            'custom_fields': settings.custom_fields_names,
+            'custom_fields': custom_fields,
             'show_targets': settings.show_targets,
             'show_tags': settings.show_tags,
+            'is_update': False  # Явно указываем, что это создание
         })
         return context
 
@@ -72,7 +76,6 @@ class DiaryEntryCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         response = super().form_valid(form)
 
-        # Сохраняем кастомные поля
         settings = get_object_or_404(DiarySettings, user=self.request.user)
         for field_name in settings.custom_fields_names:
             value = self.request.POST.get(f'custom_{field_name}', '').strip()
@@ -125,7 +128,6 @@ class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):
     form_class = DiaryEntryForm
     template_name = 'diary/entry_form.html'
     context_object_name = 'entry'
-    success_url = reverse_lazy('diary:entry_list')
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
@@ -134,25 +136,22 @@ class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         settings = get_object_or_404(DiarySettings, user=self.request.user)
 
-        # Получаем существующие значения кастомных полей
-        custom_fields_values = {
-            field.name: field.value
-            for field in self.object.custom_fields.all()
-        }
+        # Получаем текущие значения кастомных полей
+        existing_fields = {field.name: field.value for field in self.object.custom_fields.all()}
 
-        # Создаем список полей с их значениями
+        # Создаем список всех кастомных полей с их значениями
         custom_fields = []
         for field_name in settings.custom_fields_names:
             custom_fields.append({
                 'name': field_name,
-                'value': custom_fields_values.get(field_name, '')
+                'value': existing_fields.get(field_name, '')
             })
 
         context.update({
             'custom_fields': custom_fields,
             'show_targets': settings.show_targets,
             'show_tags': settings.show_tags,
-            'is_update': True  # Флаг для шаблона, что это редактирование
+            'is_update': True  # Явно указываем, что это редактирование
         })
         return context
 
@@ -160,10 +159,8 @@ class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):
         response = super().form_valid(form)
         settings = get_object_or_404(DiarySettings, user=self.request.user)
 
-        # Удаляем старые кастомные поля
-        self.object.custom_fields.all().delete()
-
-        # Создаем новые кастомные поля из формы
+        # Обновляем кастомные поля
+        self.object.custom_fields.all().delete()  # Удаляем старые
         for field_name in settings.custom_fields_names:
             value = self.request.POST.get(f'custom_{field_name}', '').strip()
             if value:
@@ -174,6 +171,9 @@ class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):
                 )
 
         return response
+
+    def get_success_url(self):
+        return reverse_lazy('diary:entry_detail', kwargs={'pk': self.object.pk})
 
 
 class DiaryEntryDeleteView(LoginRequiredMixin, DeleteView):

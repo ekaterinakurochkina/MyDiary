@@ -1,40 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{% if is_update %}Редактировать запись{% else %}Новая запись{% endif %}</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">{% if is_update %}Редактировать запись{% else %}Новая запись{% endif %}</h1>
 
-<form method="post">
-    {% csrf_token %}
+    <form method="post" class="mb-4">
+        {% csrf_token %}
 
-    {{ form.text }}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Основное содержание</h5>
+                <div class="form-group">
+                    {{ form.text }}
+                </div>
+            </div>
+        </div>
 
-    {% if show_targets %}
-    <div class="form-group">
-        <label>Цели:</label>
-        {{ form.targets }}
-    </div>
-    {% endif %}
+        {% if show_targets %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Цели</h5>
+                <div class="form-group">
+                    {{ form.targets }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
-    {% if show_tags %}
-    <div class="form-group">
-        <label>Теги:</label>
-        {{ form.tags }}
-    </div>
-    {% endif %}
+        {% if show_tags %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Теги</h5>
+                <div class="form-group">
+                    {{ form.tags }}
+                    <small class="form-text text-muted">Введите теги через запятую</small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
-    {% for field in custom_fields %}
-    <div class="form-group">
-        <label>{{ field.name }}:</label>
-        <input type="text"
-               name="custom_{{ field.name }}"
-               class="form-control"
-               value="{{ field.value }}">
-    </div>
-    {% endfor %}
+        {% if custom_fields %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Дополнительные поля</h5>
+                {% for field in custom_fields %}
+                <div class="form-group">
+                    <label for="custom_{{ field.name }}" class="font-weight-bold">{{ field.name }}</label>
+                    <input type="text"
+                           id="custom_{{ field.name }}"
+                           name="custom_{{ field.name }}"
+                           class="form-control"
+                           value="{{ field.value }}"
+                           placeholder="Введите значение для {{ field.name }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-    {% if is_update %}
-    <a href="{% url 'diary:entry_detail' pk=object.pk %}" class="btn btn-secondary">Отмена</a>
-    {% endif %}
-</form>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Сохранить
+            </button>
+            <a href="{% if is_update %}{% url 'diary:entry_detail' pk=object.pk %}{% else %}{% url 'diary:entry_list' %}{% endif %}"
+               class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> Отмена
+            </a>
+        </div>
+    </form>
+</div>
 {% endblock %}
