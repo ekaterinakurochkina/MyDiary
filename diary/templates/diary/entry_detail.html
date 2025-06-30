@@ -1,63 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between">
-                <h2>Запись от {{ entry.created_at|date:"d.m.Y H:i" }}</h2>
-                <div>
-                    <a href="{% url 'diary:entry_update' entry.pk %}" class="btn btn-sm btn-outline-secondary">
-                        Редактировать
-                    </a>
-                    <a href="{% url 'diary:entry_delete' entry.pk %}" class="btn btn-sm btn-outline-danger">
-                        Удалить
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            {% if entry.targets %}
-            <div class="mb-4 p-3 bg-light rounded">
-                <h4>Мои цели</h4>
-                <p>{{ entry.targets|linebreaks }}</p>
-            </div>
-            {% endif %}
+<h1>Запись от {{ entry.created_at|date:"d.m.Y H:i" }}</h1>
 
-            <div class="mb-4">
-                <h4>Текст записи</h4>
-                <p>{{ entry.text|linebreaks }}</p>
-            </div>
+<div class="entry-content">{{ entry.text|linebreaks }}</div>
 
-            {% if entry.custom_fields.all %}
-            <div class="mb-4">
-                <h4>Дополнительные поля</h4>
-                <table class="table">
-                    <tbody>
-                    {% for field in entry.custom_fields.all %}
-                    <tr>
-                        <th width="30%">{{ field.name }}</th>
-                        <td>{{ field.value }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+{% if entry.targets %}
+<h3>Цели:</h3>
+<p>{{ entry.targets }}</p>
+{% endif %}
 
-            <div class="mt-4">
-                {% for tag in entry.tags.all %}
-                <span class="badge bg-secondary">{{ tag }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="card-footer text-muted">
-            Обновлено: {{ entry.updated_at|date:"d.m.Y H:i" }}
-        </div>
-    </div>
+{% if entry.tags.all %}
+<h3>Теги:</h3>
+<p>{{ entry.tags.all|join:", " }}</p>
+{% endif %}
 
-    <a href="{% url 'diary:entry_list' %}" class="btn btn-outline-primary mt-3">
-        Назад к списку
-    </a>
-</div>
+{% if custom_fields %}
+<h3>Дополнительные поля:</h3>
+<ul>
+    {% for field in custom_fields %}
+    <li><strong>{{ field.name }}:</strong> {{ field.value }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<a href="{% url 'diary:entry_create' %}" class="btn btn-primary">Новая запись</a>
 {% endblock %}

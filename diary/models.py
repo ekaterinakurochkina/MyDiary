@@ -5,7 +5,6 @@ from users.models import User
 
 
 class DiaryEntry(models.Model):
-    """Основная модель записи в дневнике"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diary_entries')
     created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
@@ -28,4 +27,16 @@ class DiarySettings(models.Model):
         max_length=20,
         choices=[('light', 'Светлая'), ('dark', 'Тёмная')],
         default='light'
+    )
+    default_targets = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Цели по умолчанию",
+        help_text="Эти цели будут автоматически подставляться в новые записи"
+    )
+    custom_fields_names = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Названия кастомных полей",
+        help_text="Список названий дополнительных полей для записей"
     )
