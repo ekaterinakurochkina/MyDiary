@@ -1,76 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{% if object %}Редактирование записи{% else %}Новая запись{% endif %}</h2>
+<h1>{% if is_update %}Редактировать запись{% else %}Новая запись{% endif %}</h1>
 
 <form method="post">
     {% csrf_token %}
-    
-    <div class="mb-4">
-        <h4>Ваши цели</h4>
-        {{ form.targets }}
-        <small class="text-muted">Запишите, чего хотите достичь</small>
-    </div>
-    
-    <div class="mb-4">
-        <h4>Основной текст</h4>
-        {{ form.text }}
-    </div>
-    
-    <div class="mb-4">
-        <h4>Теги</h4>
-        {{ form.tags }}
-        <small class="text-muted">Введите теги через запятую</small>
-    </div>
-    
-    <div class="mb-4">
-        <h4>Дополнительные поля</h4>
-        {{ custom_fields_formset.management_form }}
-        {% for form in custom_fields_formset %}
-            <div class="custom-field-form mb-2">
-                {{ form.id }}
-                <div class="row">
-                    <div class="col-md-5">
-                        {{ form.name.label_tag }}
-                        {{ form.name }}
-                    </div>
-                    <div class="col-md-5">
-                        {{ form.value.label_tag }}
-                        {{ form.value }}
-                    </div>
-                    <div class="col-md-2">
-                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="add-more">
-            Добавить поле
-        </button>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Добавление новых форм для кастомных полей
-    document.getElementById('add-more').addEventListener('click', function() {
-        const totalForms = document.getElementById('id_custom_fields-TOTAL_FORMS');
-        const currentCount = parseInt(totalForms.value);
-        const formContainer = document.querySelector('.custom-field-form').cloneNode(true);
-        
-        // Очищаем значения и обновляем атрибуты name/id
-        formContainer.querySelectorAll('input').forEach(input => {
-            input.value = '';
-            input.name = input.name.replace('-0-', `-${currentCount}-`);
-            input.id = input.id.replace('-0-', `-${currentCount}-`);
-        });
-        
-        // Вставляем перед кнопкой
-        this.parentNode.insertBefore(formContainer, this);
-        totalForms.value = currentCount + 1;
-    });
-});
-</script>
+    {{ form.text }}
+
+    {% if show_targets %}
+    <div class="form-group">
+        <label>Цели:</label>
+        {{ form.targets }}
+    </div>
+    {% endif %}
+
+    {% if show_tags %}
+    <div class="form-group">
+        <label>Теги:</label>
+        {{ form.tags }}
+    </div>
+    {% endif %}
+
+    {% for field in custom_fields %}
+    <div class="form-group">
+        <label>{{ field.name }}:</label>
+        <input type="text"
+               name="custom_{{ field.name }}"
+               class="form-control"
+               value="{{ field.value }}">
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    {% if is_update %}
+    <a href="{% url 'diary:entry_detail' pk=object.pk %}" class="btn btn-secondary">Отмена</a>
+    {% endif %}
+</form>
 {% endblock %}
