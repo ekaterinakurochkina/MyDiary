@@ -21,7 +21,8 @@ class Migration(migrations.Migration):
                 ('theme',
                  models.CharField(choices=[('light', 'Светлая'), ('dark', 'Тёмная')], default='light', max_length=20)),
                 (
-                'user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                    'user',
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
