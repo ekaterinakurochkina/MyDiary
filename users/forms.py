@@ -49,28 +49,42 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
         fields = ("email", "display_name", "password1", "password2", "avatar")
 
 
-class ProfileUpdateForm(UserChangeForm):
+from django import forms
+from .models import User
+
+class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("email", "password", "phone", "avatar")
+        fields = ['display_name', 'email', 'phone']
         widgets = {
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'readonly': True
+            }),
+            'display_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите ваше имя'
+            }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
-                'data-format': '+7 (ddd) ddd-dd-dd'
-            }),
+                'placeholder': '+79998887766'
+            })
         }
         labels = {
+            'display_name': 'Имя для отображения',
             'email': 'Email',
-            'phone': 'Телефон',
-            'avatar': 'Аватар',
+            'phone': 'Телефон'
+        }
+        help_texts = {
+            'display_name': 'Как к вам обращаться в системе',
+            'phone': 'Формат: +79998887766'
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password'].widget = forms.HiddenInput()
-        self.fields['password'].required = False
-
+        # Устанавливаем начальное значение для display_name
+        if self.instance and self.instance.display_name:
+            self.fields['display_name'].initial = self.instance.display_name
 
 class PasswordRecoveryForm(StyleFormMixin, forms.Form):
     email = forms.EmailField(label="Укажите Email")

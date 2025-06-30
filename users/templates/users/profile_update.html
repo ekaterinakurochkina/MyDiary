@@ -6,36 +6,55 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="h4 mb-0">Редактирование профиля</h2>
-                        <a href="{% url 'diary:home' %}" class="btn btn-sm btn-outline-secondary">
-                            <i class="fas fa-arrow-left"></i> Назад
-                        </a>
+                    <!-- Приветствие -->
+                    <div class="text-center mb-4">
+                        <h2 class="h4 mb-1">Добро пожаловать, {{ user.display_name|default:"Пользователь" }}!</h2>
+                        <p class="text-muted">Редактирование профиля</p>
                     </div>
 
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post">
                         {% csrf_token %}
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-                                {{ form.email }}
-                                <div class="form-text">Ваш основной email</div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон</label>
-                                {{ form.phone }}
-                            </div>
+                        <!-- Поле display_name -->
+                        <div class="mb-3">
+                            <label for="id_display_name" class="form-label">
+                                {{ form.display_name.label }}
+                            </label>
+                            {{ form.display_name }}
+                            {% if form.display_name.help_text %}
+                                <div class="form-text">{{ form.display_name.help_text }}</div>
+                            {% endif %}
+                            {% if form.display_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.display_name.errors|first }}
+                                </div>
+                            {% endif %}
                         </div>
 
+                        <!-- Поле email -->
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">
+                                {{ form.email.label }}
+                            </label>
+                            {{ form.email }}
+                            {% if form.email.help_text %}
+                                <div class="form-text">{{ form.email.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле phone -->
                         <div class="mb-4">
-                            <label for="{{ form.avatar.id_for_label }}" class="form-label">Аватар</label>
-                            {{ form.avatar }}
-                            {% if form.instance.avatar %}
-                            <div class="mt-2">
-                                <img src="{{ form.instance.avatar.url }}" alt="Текущий аватар"
-                                     class="img-thumbnail" style="max-width: 150px;">
-                            </div>
+                            <label for="id_phone" class="form-label">
+                                {{ form.phone.label }}
+                            </label>
+                            {{ form.phone }}
+                            {% if form.phone.help_text %}
+                                <div class="form-text">{{ form.phone.help_text }}</div>
+                            {% endif %}
+                            {% if form.phone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.phone.errors|first }}
+                                </div>
                             {% endif %}
                         </div>
 

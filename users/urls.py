@@ -1,8 +1,10 @@
 from django.contrib.auth.views import LoginView
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import email_verification, UserListView, UserCreateView, DeleteAccountView, logout_view, ProfileUpdateView
+from .views import (email_verification, UserListView, UserCreateView,
+                    DeleteAccountView, logout_view, ProfileUpdateView, remove_avatar)
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from .forms import StyledPasswordChangeForm
 app_name = 'users'
 
@@ -14,6 +16,7 @@ urlpatterns = [
     path('delete/', DeleteAccountView.as_view(template_name="user_confirm_delete.html"), name='delete'),
     path('email-confirm/<str:token>/', email_verification, name='email-confirm'),
     path('profile/', ProfileUpdateView.as_view(), name='profile'),
+    path('avatar/remove/', remove_avatar, name='avatar_remove'),
     path('password/change/',
          auth_views.PasswordChangeView.as_view(
              template_name='users/password_change.html',
