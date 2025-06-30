@@ -1,0 +1,92 @@
+<div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'diary:home' %}">
+            <i class="fas fa-book-open me-2"></i>
+            <strong>МойДневник</strong>
+        </a>
+        <button aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-bs-target="#navbarHeader" data-bs-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="collapse navbar-collapse bg-dark" id="navbarHeader">
+    <div class="container">
+        <div class="row py-4">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-book fa-2x text-primary me-3"></i>
+                    <div>
+                        {% if user.is_authenticated %}
+                        <h2 class="h4 text-white mb-0">Личный дневник пользователя {{user.display_name}}</h2>
+                        {% else %}
+                        <h2 class="h4 text-white mb-0">Личный дневник</h2>
+                        {% endif %}
+                        <p class="text-muted mb-0">Записывайте мысли и идеи</p>
+                    </div>
+                </div>
+                <p class="text-muted small">
+                    Ваше персональное пространство для размышлений, целей и воспоминаний.
+                </p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h4 class="h5 text-white border-bottom pb-2 mb-3">Навигация</h4>
+                <ul class="list-unstyled">
+                    {% if user.is_authenticated %}
+                    <li class="mb-2">
+                        <a class="text-white d-flex align-items-center" href="{% url 'diary:home' %}">
+                            <i class="fas fa-home me-2"></i> Главная
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a class="text-white d-flex align-items-center" href="{% url 'diary:entry_list' %}">
+                            <i class="fas fa-list me-2"></i> Мои записи
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a class="text-white d-flex align-items-center" href="{% url 'diary:entry_create' %}">
+                            <i class="fas fa-plus me-2"></i> Новая запись
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-white d-flex align-items-center" href="{% url 'diary:settings' %}">
+                            <i class="fas fa-cog me-2"></i> Настройки
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h4 class="h5 text-white border-bottom pb-2 mb-3">Аккаунт</h4>
+                <ul class="list-unstyled">
+                    {% if user.is_authenticated %}
+                    <li class="mb-2">
+                        <a class="text-white d-flex align-items-center" href="{% url 'users:profile' %}">
+                            <i class="fas fa-user me-2"></i> Профиль
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-white d-flex align-items-center" href="{% url 'users:logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Выход
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="mb-2">
+                        <a class="text-white d-flex align-items-center" href="{% url 'users:login' %}">
+                            <i class="fas fa-sign-in-alt me-2"></i> Вход
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-white d-flex align-items-center" href="{% url 'users:register' %}">
+                            <i class="fas fa-user-plus me-2"></i> Регистрация
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

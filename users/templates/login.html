@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 text-muted">
+            Вход в систему
+        </h1>
+        <div>
+            <a class="btn btn-sm btn-outline-secondary" href="/">  <!-- Изменено на корневой URL -->
+                <i class="fas fa-arrow-left"></i> На главную
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form class="auth-form" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-sign-in-alt me-1"></i> Войти
+                    </button>
+                    <a class="text-muted small" href="{% url 'users:register' %}">
+                        Нет аккаунта? Зарегистрироваться
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Удалить аккаунт{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>Удаление аккаунта</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить.</p>
+        <div class="form-group">
+            <label for="password">Подтвердите пароль:</label>
+            <input class="form-control" name="password" required type="password">
+        </div>
+        <button class="btn btn-danger" type="submit">Удалить аккаунт</button>
+        <a class="btn btn-secondary" href="{% url 'diary:home' %}">Отмена</a>
+    </form>
+</div>
+{% endblock %}

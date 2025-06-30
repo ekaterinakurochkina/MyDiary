@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Настройки моего дневника</h1>
+
+    <form id="settings-form" method="post">
+        {% csrf_token %}
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Основные настройки</h5>
+
+                <div class="form-check form-switch mb-3">
+                    {{ form.show_targets }}
+                    <label class="form-check-label" for="{{ form.show_targets.id_for_label }}">
+                        Показывать цели в записях
+                    </label>
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    {{ form.show_tags }}
+                    <label class="form-check-label" for="{{ form.show_tags.id_for_label }}">
+                        Использовать теги
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.default_targets.id_for_label }}">Цели по умолчанию</label>
+                    {{ form.default_targets }}
+                    <div class="form-text">Эти цели будут автоматически подставляться в новые записи</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Пользовательские поля</h5>
+
+                <div id="custom-fields-container">
+                    {% for field in custom_fields %}
+                    <div class="input-group mb-2">
+                        <input class="form-control"
+                               name="custom_fields"
+                               placeholder="Название поля"
+                               type="text"
+                               value="{{ field }}">
+                        <button class="btn btn-outline-danger remove-field" type="button">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="btn btn-outline-secondary mt-2" id="add-field" type="button">
+                    <i class="fas fa-plus"></i> Добавить поле
+                </button>
+
+                <div class="form-text mt-2">Эти поля будут отображаться при создании новых записей</div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-save"></i> Сохранить настройки
+            </button>
+            <a class="btn btn-outline-secondary" href="{% url 'diary:entry_list' %}">
+                <i class="fas fa-times"></i> Отмена
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('custom-fields-container');
+        const addButton = document.getElementById('add-field');
+
+        // Добавление нового поля
+        addButton.addEventListener('click', function() {
+            const newField = document.createElement('div');
+            newField.className = 'input-group mb-2';
+            newField.innerHTML = `
+                <input type="text"
+                       name="custom_fields"
+                       class="form-control"
+                       placeholder="Название поля">
+                <button type="button" class="btn btn-outline-danger remove-field">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newField);
+        });
+
+        // Удаление поля
+        container.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-field') ||
+                e.target.closest('.remove-field')) {
+                e.target.closest('.input-group').remove();
+            }
+        });
+    });
+</script>
+{% endblock %}
