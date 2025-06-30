@@ -1,46 +1,88 @@
-<div class="collapse text-bg-dark" id="navbarHeader">
+<div class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container">
-      <div class="row">
-        <div class="col-sm-8 col-md-7 py-4">
-          <h2>Дневник</h2>
-          <p class="text-body-secondary">Ваш личный дневник</p>
-        </div>
-
-        <div class="col-sm-4 offset-md-1 py-4">
-          <h4>Навигация</h4>
-          <ul class="list-unstyled">
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'diary:home' %}" class="text-white">Главная</a></li>
-            <li><a href="{% url 'diary:settings' %}" class="text-white">Настройки</a></li>
-            <li><a href="{% url 'diary:entry_create' %}" class="text-white">Запись в дневнике</a></li>
-            <li><a href="{% url 'diary:entry_list' %}" class="text-white">Мои записи</a></li>
-            {% endif %}
-          </ul>
-        </div>
-
-        <div class="col-sm-4 offset-md-1 py-4">
-          <h4>Пользователям</h4>
-          <ul class="list-unstyled">
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'users:logout' %}" class="text-white">Выход</a></li>
-            {% else %}
-            <li><a href="{% url 'users:login' %}" class="text-white">Вход</a></li>
-            <li><a href="{% url 'users:register' %}" class="text-white">Регистрация</a></li>
-
-            {% endif %}
-          </ul>
-        </div>
-      </div>
+        <a href="{% url 'diary:home' %}" class="navbar-brand d-flex align-items-center">
+            <i class="fas fa-book-open me-2"></i>
+            <strong>МойДневник</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+                aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </div>
-  </div>
-  <div class="navbar navbar-dark bg-dark shadow-sm">
+</div>
+
+<div class="collapse navbar-collapse bg-dark" id="navbarHeader">
     <div class="container">
-      <a href="#" class="navbar-brand d-flex align-items-center">
+        <div class="row py-4">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-book fa-2x text-primary me-3"></i>
+                    <div>
+                        <h2 class="h4 text-white mb-0">Личный дневник</h2>
+                        <p class="text-muted mb-0">Записывайте мысли и идеи</p>
+                    </div>
+                </div>
+                <p class="text-muted small">
+                    Ваше персональное пространство для размышлений, целей и воспоминаний.
+                </p>
+            </div>
 
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h4 class="h5 text-white border-bottom pb-2 mb-3">Навигация</h4>
+                <ul class="list-unstyled">
+                    {% if user.is_authenticated %}
+                    <li class="mb-2">
+                        <a href="{% url 'diary:home' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-home me-2"></i> Главная
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'diary:entry_list' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-list me-2"></i> Мои записи
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'diary:entry_create' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-plus me-2"></i> Новая запись
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'diary:settings' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-cog me-2"></i> Настройки
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
 
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="h5 text-white border-bottom pb-2 mb-3">Аккаунт</h4>
+                <ul class="list-unstyled">
+                    {% if user.is_authenticated %}
+                    <li class="mb-2">
+                        <a href="{% url 'users:profile' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i> Профиль
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'users:logout' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-sign-out-alt me-2"></i> Выход
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="mb-2">
+                        <a href="{% url 'users:login' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-sign-in-alt me-2"></i> Вход
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'users:register' %}" class="text-white d-flex align-items-center">
+                            <i class="fas fa-user-plus me-2"></i> Регистрация
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
+</div>

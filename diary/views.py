@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, UpdateView, DetailView, TemplateView, ListView, DeleteView
-
+from taggit.models import Tag
 from .forms import DiarySettingsForm, DiaryEntryForm
 from .models import DiaryEntry, DiarySettings, CustomField
 
@@ -115,12 +115,36 @@ class UpdateCustomFieldsView(LoginRequiredMixin, TemplateView):
 
 class DiaryEntryListView(LoginRequiredMixin, ListView):
     model = DiaryEntry
-    template_name = 'entry_list.html'
+    template_name = 'diary/entry_list.html'
     context_object_name = 'entries'
     paginate_by = 10
 
     def get_queryset(self):
-        return DiaryEntry.objects.filter(user=self.request.user).order_by('-created_at')
+        queryset = DiaryEntry.objects.filter(user=self.request.user)
+
+        # Поиск по тексту
+        search_query = self.request.GET.get('q')
+        if search_query:
+            queryset = queryset.filter(text__icontains=search_query)
+
+        # Поиск по тегам
+        tag_query = self.request.GET.get('tag')
+        if tag_query:
+            queryset = queryset.filter(tags__name__in=[tag_query])
+
+        return queryset.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        context['tag_query'] = self.request.GET.get('tag', '')
+
+        # Получаем все теги пользователя
+        context['tags'] = Tag.objects.filter(
+            diaryentry__user=self.request.user
+        ).distinct()
+
+        return context
 
 
 class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):

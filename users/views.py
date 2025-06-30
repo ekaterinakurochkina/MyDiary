@@ -13,7 +13,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import UserRegisterForm, UserUpdateForm
+from users.forms import UserRegisterForm, ProfileUpdateForm
 from users.models import User
 
 
@@ -21,23 +21,6 @@ def logout_view(request):
     logout(request)
     return redirect('diary:home')
 
-
-# ______________________блокировка пользователя
-# @permission_required("users.can_inactivate")
-# def block_user(self, pk):accounts
-#     user = get_object_or_404(User, pk=pk)
-#     user.is_active = False
-#     user.save()
-#     return redirect(reverse("users:user_list"))
-#
-# # ______________________разблокировка пользователя
-# @permission_required("users.can_inactivate")
-# def unblock_user(self, pk):
-#     user = get_object_or_404(User, pk=pk)
-#     user.is_active = True
-#     user.save()
-#     return redirect(reverse("users:user_list"))
-# ______________________
 
 class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     """ Список всех пользователей приложения (доступен менеджерам и суперюзеру) """
@@ -96,27 +79,69 @@ def email_verification(request, token):
     return redirect(reverse_lazy("users:login"))
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
-    """ Обновление данных пользователя """
-    model = User
-    form_class = UserUpdateForm
-    template_name = "users:user_form.html"
-    success_url = reverse_lazy("users:user_edit")
-
-    # def get_object(self, queryset=None):
-    #     self.object = super().get_object(queryset)
-    #     if not self.request.user.is_superuser:
-    #         raise PermissionDenied
-    #     return self.object
-    def dispatch(self, request, *args, **kwargs):
-        # Проверяем, является ли текущий пользователь суперпользователем
-        if not request.user.is_superuser:
-            raise PermissionDenied("У вас нет прав для редактирования этого пользователя.")
-        return super().dispatch(request, *args, **kwargs)
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Представление для обновления профиля пользователя
+    с обработкой аватара и валидацией данных
+    """
+    template_name = 'users/profile_update.html'
+    form_class = ProfileUpdateForm
+    success_url = reverse_lazy('users:profile_update')
 
     def get_object(self, queryset=None):
-        # Загружаем объект, но проверка прав уже выполнена в dispatch
-        return super().get_object(queryset)
+        """Получаем текущего пользователя"""
+        return self.request.user
+
+    def dispatch(self, request, *args, **kwargs):
+        """Дополнительная проверка доступа"""
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """Обработка успешной валидации формы"""
+        user = form.save(commit=False)
+
+        # Обработка аватара
+        if 'avatar' in form.changed_data and form.cleaned_data['avatar']:
+            avatar = form.cleaned_data['avatar']
+            try:
+                # Оптимизация изображения
+                img = Image.open(avatar)
+                if img.height > 300 or img.width > 300:
+                    output_size = (300, 300)
+                    img.thumbnail(output_size)
+
+                    # Сохранение в том же формате
+                    temp_file = avatar.temporary_file_path()
+                    img.save(temp_file, quality=70)
+
+                # Проверка MIME-типа
+                valid_mime_types = ['image/jpeg', 'image/png', 'image/gif']
+                file_mime_type = avatar.content_type
+
+                if file_mime_type not in valid_mime_types:
+                    form.add_error('avatar', 'Неподдерживаемый формат изображения')
+                    return self.form_invalid(form)
+
+            except Exception as e:
+                form.add_error('avatar', f'Ошибка обработки изображения: {str(e)}')
+                return self.form_invalid(form)
+
+        user.save()
+        messages.success(self.request, 'Профиль успешно обновлен!')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        """Обработка невалидной формы"""
+        messages.error(self.request, 'Пожалуйста, исправьте ошибки в форме')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        """Добавляем дополнительные данные в контекст"""
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Редактирование профиля'
+        return context
 
 
 class DeleteAccountView(LoginRequiredMixin, DeleteView):
@@ -138,3 +163,4 @@ class DeleteAccountView(LoginRequiredMixin, DeleteView):
 
         messages.error(request, 'Неверный пароль')
         return self.get(request, *args, **kwargs)
+

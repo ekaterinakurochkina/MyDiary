@@ -1,11 +1,19 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm
-
 
 from diary.forms import StyleFormMixin
 from .models import User
+
+
+class StyledPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+            self.fields[field].help_text = None
 
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
@@ -41,27 +49,32 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
         fields = ("email", "display_name", "password1", "password2", "avatar")
 
 
-class UserUpdateForm(StyleFormMixin, ModelForm):
+class ProfileUpdateForm(UserChangeForm):
     class Meta:
         model = User
-        fields = (
-            "email",
-            "password",
-            "phone",
-            "avatar",
-        )
+        fields = ("email", "password", "phone", "avatar")
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'data-format': '+7 (ddd) ddd-dd-dd'
+            }),
+        }
+        labels = {
+            'email': 'Email',
+            'phone': 'Телефон',
+            'avatar': 'Аватар',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        phone = self.fields["phone"].widget
-
-        self.fields["password"].widget = forms.HiddenInput()
-        phone.attrs["class"] = "form-control bfh-phone"
-        phone.attrs["data-format"] = "+7 (ddd) ddd-dd-dd"
+        self.fields['password'].widget = forms.HiddenInput()
+        self.fields['password'].required = False
 
 
 class PasswordRecoveryForm(StyleFormMixin, forms.Form):
     email = forms.EmailField(label="Укажите Email")
+
 
 class UserLoginForm(StyleFormMixin, AuthenticationForm):
     model = User
