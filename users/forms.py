@@ -8,6 +8,7 @@ from .models import User
 
 
 class StyledPasswordChangeForm(PasswordChangeForm):
+    """ Форма смены пароля пользователя """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
@@ -16,6 +17,7 @@ class StyledPasswordChangeForm(PasswordChangeForm):
 
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
+    """ Форма регистрации пользователя """
     display_name = forms.CharField(
         label='Как к вам обращаться?',
         max_length=150,
@@ -53,6 +55,7 @@ from .models import User
 
 
 class ProfileUpdateForm(forms.ModelForm):
+    """ Форма обновления данных пользователя """
     class Meta:
         model = User
         fields = ['display_name', 'email', 'phone']
@@ -87,9 +90,6 @@ class ProfileUpdateForm(forms.ModelForm):
             self.fields['display_name'].initial = self.instance.display_name
 
 
-class PasswordRecoveryForm(StyleFormMixin, forms.Form):
-    email = forms.EmailField(label="Укажите Email")
-
-
 class UserLoginForm(StyleFormMixin, AuthenticationForm):
+    """ Форма для входа на сайт"""
     model = User
