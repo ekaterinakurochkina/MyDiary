@@ -56,6 +56,7 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
+        """ функция для подтверждения регистрации через электронную почту """
         user = form.save()
         user.is_active = False
         token = secrets.token_hex(16)  # генерируем токен
@@ -77,6 +78,8 @@ class UserCreateView(CreateView):
 
 
 def email_verification(request, token):
+    """ Функция, перенаправляющая зарегистрированного пользователя на вход
+    после его перехода по указанной в письме ссылки. Активирует этого пользователя """
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.token = None  # очищаем токен после использования
@@ -157,6 +160,7 @@ class DeleteAccountView(LoginRequiredMixin, DeleteView):
 @login_required
 @require_POST
 def remove_avatar(request):
+    """ Функция для удаления аватара """
     user = request.user
     if user.avatar:
         user.avatar.delete()

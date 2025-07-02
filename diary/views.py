@@ -12,15 +12,18 @@ from .models import DiaryEntry, DiarySettings, CustomField
 
 
 class HomePageView(TemplateView):
+    """ Контроллер домашней страницы"""
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
+        # предполагалось, что я покажу пользователю, сколько у него записей в дневнике
         context = super().get_context_data(**kwargs)
         context["total_entries"] = DiaryEntry.objects.count()
         return context
 
 
 class SettingsView(LoginRequiredMixin, UpdateView):
+    """ Контроллер для настроек вида дневника"""
     template_name = 'diary/settings.html'
     form_class = DiarySettingsForm
     success_url = reverse_lazy('diary:settings')
@@ -42,6 +45,7 @@ class SettingsView(LoginRequiredMixin, UpdateView):
 
 
 class DiaryEntryCreateView(LoginRequiredMixin, CreateView):
+    """ Контроллер для создания новой записи дневника"""
     model = DiaryEntry
     form_class = DiaryEntryForm
     template_name = 'diary/entry_form.html'
@@ -91,6 +95,7 @@ class DiaryEntryCreateView(LoginRequiredMixin, CreateView):
 
 
 class DiaryEntryDetailView(LoginRequiredMixin, DetailView):
+    """ Контроллер для просмотра конкретной записи дневника"""
     model = DiaryEntry
     template_name = 'diary/entry_detail.html'
     context_object_name = 'entry'
@@ -106,6 +111,7 @@ class DiaryEntryDetailView(LoginRequiredMixin, DetailView):
 
 @method_decorator(require_POST, name='dispatch')
 class UpdateCustomFieldsView(LoginRequiredMixin, TemplateView):
+    """ Контроллер для обновления пользовательских полей дневника"""
     def post(self, request, *args, **kwargs):
         settings = get_object_or_404(DiarySettings, user=request.user)
         custom_fields = request.POST.getlist('custom_fields[]')
@@ -115,6 +121,7 @@ class UpdateCustomFieldsView(LoginRequiredMixin, TemplateView):
 
 
 class DiaryEntryListView(LoginRequiredMixin, ListView):
+    """ Контроллер для просмотра списка записей дневника"""
     model = DiaryEntry
     template_name = 'diary/entry_list.html'
     context_object_name = 'entries'
@@ -149,6 +156,7 @@ class DiaryEntryListView(LoginRequiredMixin, ListView):
 
 
 class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):
+    """ Контроллер для обновления записи дневника"""
     model = DiaryEntry
     form_class = DiaryEntryForm
     template_name = 'diary/entry_form.html'
@@ -202,6 +210,7 @@ class DiaryEntryUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class DiaryEntryDeleteView(LoginRequiredMixin, DeleteView):
+    """ Контроллер для удаления записи дневника """
     model = DiaryEntry
     template_name = 'diary/entry_confirm_delete.html'
     success_url = reverse_lazy('diary:entry_list')

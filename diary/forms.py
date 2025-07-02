@@ -5,6 +5,7 @@ from .models import DiaryEntry, DiarySettings
 
 
 class StyleFormMixin:
+    """ Стилизация форм для правильного отображения """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
@@ -16,6 +17,7 @@ class StyleFormMixin:
 
 
 class DiaryEntryForm(forms.ModelForm):
+    """ Форма записи дневника """
     class Meta:
         model = DiaryEntry
         fields = ['text', 'targets', 'tags']
@@ -25,23 +27,8 @@ class DiaryEntryForm(forms.ModelForm):
         }
 
 
-# class CustomFieldForm(forms.ModelForm):
-#     class Meta:
-#         model = CustomField
-#         fields = ['name', 'value']
-#         widgets = {
-#             'value': forms.TextInput(attrs={'class': 'form-control'}),
-#         }
-#
-# CustomFieldFormSet = forms.inlineformset_factory(
-#     DiaryEntry,
-#     CustomField,
-#     form=CustomFieldForm,
-#     extra=1,  # Количество пустых форм по умолчанию
-#     can_delete=True  # Разрешить удаление полей
-# )
-
 class DiarySettingsForm(forms.ModelForm):
+    """ Форма настроек отображения дневника """
     class Meta:
         model = DiarySettings
         fields = ['show_targets', 'show_tags', 'default_targets']
