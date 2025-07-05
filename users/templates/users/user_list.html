@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+<title>Список пользователей</title>
+{% block content %}
+<div class="container-fluid">
+    <main>
+        <section class="text-center container">
+            <div class="row py-lg-0">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Список пользователей (владельцев дневников)</h1>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <p></p>
+    <p></p>
+
+    <div class="container-fluid">
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>email</th>
+                <th>Роль</th>
+                <th></th>
+                <th>Действия</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in object_list %}
+            <tr>
+                <td style="width: 150px;"></td>
+                <td style="width: 200px; padding-left: 10px; background-color: #f2f2f2;">{{ user.email }}</td>
+                <td style="width: 200px; padding-left: 10px; background-color: #f2f2f2;">
+                    {% if user.is_superuser %}
+                    Суперюзер
+                    {% elif user.is_manager %}
+                    Менеджер
+                    {% elif user.is_authenticated %}
+                    Пользователь
+                    {% else %}
+                    Неопределенная роль
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.is_superuser %}
+                    -----------
+                    {% elif user.is_manager %}
+                    -----------
+                    {% elif user.is_authenticated %}
+                    {% if user.is_active %}
+                    <a class="btn btn-secondary"
+                       href="{% url 'users:block_user' user.pk %}">Заблокировать</a>
+                    {% else %}
+                    <a class="btn btn-secondary"
+                       href="{% url 'users:unblock_user' user.pk %}">Разблокировать</a>
+                    {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not user.is_superuser %}
+                    <a class="btn btn-primary"
+                       href="{% url 'users:user_edit' user.pk %}">Редактировать</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not user.is_superuser %}
+                    <a class="btn btn-danger" href="{% url 'users:user_delete' user.pk %}" role="button"
+                       style="width: 150px;">Удалить</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p></p>
+        <p></p>
+
+    </div>
+
+
+    <div style="text-align: center; margin-top: 0px; margin-bottom: 30px;">
+        <a class="btn btn-primary"
+           href="{% url 'diary:home' %}"
+           style="width: 540px; color: white; padding: 10px 10px; border: none; border-radius: 4px; cursor: pointer">На
+            главную</a>
+    </div>
+
+</div>
+
+{% endblock %}

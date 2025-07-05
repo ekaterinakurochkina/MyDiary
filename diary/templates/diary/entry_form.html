@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{% if is_update %}Редактировать запись{% else %}Новая запись{% endif %}</h1>
+
+    <form class="mb-4" method="post">
+        {% csrf_token %}
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Основное содержание</h5>
+                <div class="form-group">
+                    {{ form.text }}
+                </div>
+            </div>
+        </div>
+
+        {% if show_targets %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Цели</h5>
+                <div class="form-group">
+                    {{ form.targets }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if show_tags %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Теги</h5>
+                <div class="form-group">
+                    {{ form.tags }}
+                    <small class="form-text text-muted">Введите теги через запятую</small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if custom_fields %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Дополнительные поля</h5>
+                {% for field in custom_fields %}
+                <div class="form-group">
+                    <label class="font-weight-bold" for="custom_{{ field.name }}">{{ field.name }}</label>
+                    <input class="form-control"
+                           id="custom_{{ field.name }}"
+                           name="custom_{{ field.name }}"
+                           placeholder="Введите значение для {{ field.name }}"
+                           type="text"
+                           value="{{ field.value }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-save"></i> Сохранить
+            </button>
+            <a class="btn btn-secondary ml-2"
+               href="{% if is_update %}{% url 'diary:entry_detail' pk=object.pk %}{% else %}{% url 'diary:entry_list' %}{% endif %}">
+                <i class="fas fa-times"></i> Отмена
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

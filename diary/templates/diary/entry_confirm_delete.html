@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Подтверждение удаления</h2>
+        </div>
+        <div class="card-body">
+            <p>Вы уверены, что хотите удалить запись от {{ entry.created_at|date:"d.m.Y H:i" }}?</p>
+
+            <div class="alert alert-warning">
+                <strong>Текст записи:</strong> {{ entry.text|truncatechars:100 }}
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Да, удалить</button>
+                <a class="btn btn-outline-secondary" href="{% url 'diary:entry_detail' entry.pk %}">
+                    Отмена
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
